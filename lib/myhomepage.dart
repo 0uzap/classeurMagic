@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -26,7 +28,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> recupCartes(String idCarte) async {
     this.idCarte = idCarte;
-    String url = "https://api.magicthegathering.io/v1/cards/" + idCarte;
+    String url = "https://api.magicthegathering.io/v1/cards/$idCarte";
     // https://api.magicthegathering.io/v1/cards/130550
     var reponse = await http.get(Uri.parse(url));
     if (reponse.statusCode == 200) {
@@ -44,12 +46,12 @@ class _MyHomePageState extends State<MyHomePage> {
     if (_formKey.currentState!.validate()) {
       await recupCartes(idCarte);
       if (recupCarte) {
-        Navigator.popAndPushNamed(context, '/affiche', arguments: carte);
+        Navigator.popAndPushNamed(context as BuildContext, '/affiche', arguments: carte);
       } else {
         setState(() {
           _isLoading = false;
         });
-        ScaffoldMessenger.of(context).showSnackBar(
+        ScaffoldMessenger.of(context as BuildContext).showSnackBar(
           const SnackBar(
             content: Text("Erreur dans recupération des informations."),
           ),
