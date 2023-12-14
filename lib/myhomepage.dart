@@ -14,6 +14,7 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
+
 class _MyHomePageState extends State<MyHomePage> {
   final _formKey = GlobalKey<FormState>();
 
@@ -23,7 +24,7 @@ class _MyHomePageState extends State<MyHomePage> {
   String get idCarte => "";
   set idCarte(String idCarte) {}
 
-  Map<String, dynamic> carte = new Map();
+  Map<String, dynamic> lescarte = new Map();
   bool recupCarte = false;
 
   Future<void> recupCartes(String idCarte) async {
@@ -32,8 +33,8 @@ class _MyHomePageState extends State<MyHomePage> {
     // https://api.magicthegathering.io/v1/cards/130550
     var reponse = await http.get(Uri.parse(url));
     if (reponse.statusCode == 200) {
-      carte = convert.jsonDecode(reponse.body);
-      // print(carte.toString()); (en as de problème on print en dégeulasse comme ça pour voir si il y a besoin d'un index ou s'il y a une faute comme un s en trop ou quoi comme ici)
+      lescarte = convert.jsonDecode(reponse.body);
+     // print(carte.toString());// (en as de problème on print en dégeulasse comme ça pour voir si il y a besoin d'un index ou s'il y a une faute comme un s en trop ou quoi comme ici)
       recupCarte = true;
     }
   }
@@ -46,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (_formKey.currentState!.validate()) {
       await recupCartes(idCarte);
       if (recupCarte) {
-        Navigator.popAndPushNamed(context as BuildContext, '/affiche', arguments: carte);
+        Navigator.popAndPushNamed(context as BuildContext, '/affiche', arguments: lescarte);
       } else {
         setState(() {
           _isLoading = false;
@@ -112,4 +113,26 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+}
+
+
+class Carte {
+  final int id;
+  final String name;
+  final String type;
+
+  const Carte ({
+    required this.id,
+    required this.name,
+    required this.type,
+  });
+
+/*  Map<String, dynamic> lescarte () {
+    return {
+      'id': id,
+      'name': name,
+      'type': type,
+    };
+  }
+*/
 }

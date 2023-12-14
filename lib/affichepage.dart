@@ -10,7 +10,7 @@ class AffichePage extends StatefulWidget {
 }
 
 class _AffichePageState extends State<AffichePage> {
-  Map<String, dynamic> carte = {};
+  Map<String, dynamic> lescarte = {};
 
   Widget afficheData() {
     Column contenu = Column(
@@ -18,8 +18,8 @@ class _AffichePageState extends State<AffichePage> {
       children: List.empty(growable: true),
     );
 
-    contenu.children.add(Text(carte['cards'][0]['name'].toString()));
-    contenu.children.add(Text(carte['cards'][0]['type'].toString()));
+    contenu.children.add(Text(lescarte['cards'][0]['name'].toString()));
+    contenu.children.add(Text(lescarte['cards'][0]['type'].toString()));
    // contenu.children.add(Image.network(
        // 'https://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=149934&type=card'));
 
@@ -28,7 +28,7 @@ class _AffichePageState extends State<AffichePage> {
 
   @override
   Widget build(BuildContext context) {
-    carte = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+    lescarte = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
 
     return Scaffold(
         appBar: AppBar(
