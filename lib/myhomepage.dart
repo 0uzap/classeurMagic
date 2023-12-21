@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
-import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -21,9 +22,13 @@ class _MyHomePageState extends State<MyHomePage> {
   String txtButton = "Submit";
   bool _isLoading = false;
 
-  String get idCarte => "";
-  set idCarte(String idCarte) {}
 
+String get idCarte => "";
+  set idCarte(String idCarte) {}
+ /*
+
+  String idCarte ="";
+ */
   Map<String, dynamic> lescarte = new Map();
   bool recupCarte = false;
 
@@ -34,7 +39,11 @@ class _MyHomePageState extends State<MyHomePage> {
     var reponse = await http.get(Uri.parse(url));
     if (reponse.statusCode == 200) {
       lescarte = convert.jsonDecode(reponse.body);
-     // print(carte.toString());// (en as de problème on print en dégeulasse comme ça pour voir si il y a besoin d'un index ou s'il y a une faute comme un s en trop ou quoi comme ici)
+   print(lescarte.toString());// (en as de problème on print en dégeulasse comme ça pour voir si il y a besoin d'un index ou s'il y a une faute comme un s en trop ou quoi comme ici)
+     
+     SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('carte_data', convert.jsonEncode(lescarte));
+     
       recupCarte = true;
     }
   }
@@ -47,12 +56,12 @@ class _MyHomePageState extends State<MyHomePage> {
     if (_formKey.currentState!.validate()) {
       await recupCartes(idCarte);
       if (recupCarte) {
-        Navigator.popAndPushNamed(context as BuildContext, '/affiche', arguments: lescarte);
+        Navigator.popAndPushNamed(context, '/affiche', arguments: lescarte);
       } else {
         setState(() {
           _isLoading = false;
         });
-        ScaffoldMessenger.of(context as BuildContext).showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Erreur dans recupération des informations."),
           ),
@@ -115,7 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-
+/*
 class Carte {
   final int id;
   final String name;
@@ -127,7 +136,7 @@ class Carte {
     required this.type,
   });
 
-/*  Map<String, dynamic> lescarte () {
+  Map<String, dynamic> lescarte () {
     return {
       'id': id,
       'name': name,
@@ -135,4 +144,4 @@ class Carte {
     };
   }
 */
-}
+
